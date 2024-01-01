@@ -4,7 +4,7 @@ import Link from 'next/link'
 import React from 'react'
 import Logo from './Logo'
 import { cn } from '@/lib/utils'
-import NavbarScroll from './hooks/NavbarScroll'
+import NavbarScroll from '../hooks/NavbarScroll'
 import { ThemeToggler } from './ThemeToggler'
 
 
@@ -13,7 +13,7 @@ const Navbar = () => {
     
   return (
     <header className={cn(
-        "flex justify-between items-center fixed top-0 w-full p-6",
+        "flex justify-between items-center fixed top-0 w-full p-6 backdrop-blur-sm",
         isNavbarScrolled && "border-b shadow-md  dark:shadow-white/5"
     )}>
         <nav>
