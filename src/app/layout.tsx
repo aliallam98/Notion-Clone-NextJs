@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
-import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { ThemeProvider } from "@/providers/ThemeProvider";
 import { ConvexClientProvider } from "@/providers/ConvexProvider";
@@ -19,7 +18,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <body className={inter.className}>
         <ConvexClientProvider>
         <ThemeProvider
@@ -29,7 +28,6 @@ export default function RootLayout({
           disableTransitionOnChange
           storageKey="Jotion-Theme"
         >
-          <Navbar />
           {children}
           <Footer />
         </ThemeProvider>
