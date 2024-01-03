@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import React, { ElementRef, useEffect, useRef, useState } from "react";
 import { useMediaQuery } from "usehooks-ts";
 import { cn } from "../../../lib/utils";
+import UserItem from "./UserItem";
 
 const Navigation = () => {
   const pathname = usePathname();
@@ -16,13 +17,13 @@ const Navigation = () => {
   const [isResetting, setIsResetting] = useState(false);
   const [isCollapsed, setIsCollapsed] = useState(isMobile);
 
-useEffect(()=>{
-    if(isMobile){
-        collapseHandler()
-    }else{
-        extendHandler()
+  useEffect(() => {
+    if (isMobile) {
+      collapseHandler();
+    } else {
+      extendHandler();
     }
-},[isMobile])
+  }, [isMobile]);
 
   const onClickHandler = () => {};
 
@@ -35,10 +36,13 @@ useEffect(()=>{
     if (newWidth > 340) newWidth = 340; //480
 
     if (sidebarRef.current && navbarRef.current) {
-        sidebarRef.current.style.width = `${newWidth}px`;
-        navbarRef.current.style.setProperty("left", `${newWidth}px`);
-        navbarRef.current.style.setProperty("width", `calc(100% - ${newWidth}px)`);
-      }
+      sidebarRef.current.style.width = `${newWidth}px`;
+      navbarRef.current.style.setProperty("left", `${newWidth}px`);
+      navbarRef.current.style.setProperty(
+        "width",
+        `calc(100% - ${newWidth}px)`
+      );
+    }
   };
   const onMouseUpHandler = () => {
     isResizingRef.current = false;
@@ -58,36 +62,31 @@ useEffect(()=>{
 
   console.log(isResetting);
 
-
-  const collapseHandler = ()=>{
+  const collapseHandler = () => {
     if (sidebarRef.current && navbarRef.current) {
+      setIsCollapsed(true);
+      setIsResetting(true);
 
-        setIsCollapsed(true);
-        setIsResetting(true);
-  
-        sidebarRef.current.style.width = "0";
-        navbarRef.current.style.setProperty("width", "100%");
-        navbarRef.current.style.setProperty("left", "0");
-        setTimeout(() => setIsResetting(false), 300);
-      }
-
+      sidebarRef.current.style.width = "0";
+      navbarRef.current.style.setProperty("width", "100%");
+      navbarRef.current.style.setProperty("left", "0");
+      setTimeout(() => setIsResetting(false), 300);
     }
-    const extendHandler =()=>{
-        if (sidebarRef.current && navbarRef.current) {
-            
-            setIsCollapsed(false);
-            setIsResetting(true);
-      
-            sidebarRef.current.style.width = isMobile ? "100%" : "240px"
-            navbarRef.current.style.setProperty( "width",
-            isMobile ? "0" : "calc(100% - 240px)"
-          );
-            navbarRef.current.style.setProperty( "left",
-            isMobile ? "0" : "240px");
-            setTimeout(() => setIsResetting(false), 300);
-          }
+  };
+  const extendHandler = () => {
+    if (sidebarRef.current && navbarRef.current) {
+      setIsCollapsed(false);
+      setIsResetting(true);
 
+      sidebarRef.current.style.width = isMobile ? "100%" : "240px";
+      navbarRef.current.style.setProperty(
+        "width",
+        isMobile ? "0" : "calc(100% - 240px)"
+      );
+      navbarRef.current.style.setProperty("left", isMobile ? "0" : "240px");
+      setTimeout(() => setIsResetting(false), 300);
     }
+  };
   return (
     <>
       <aside
@@ -107,7 +106,7 @@ useEffect(()=>{
         </button>
 
         <div>
-          <p>Actions Items</p>
+          <UserItem/>
         </div>
         <div className="mt-4">
           <p>Documents</p>
@@ -127,7 +126,6 @@ useEffect(()=>{
           "left-60 w-[calc(100%-240px)] absolute p-6 top-0 bg-purple-600",
           isResetting && "transition-all ease-in-out duration-300",
           isMobile && "left-0 w-full p-6"
-            
         )}
       >
         {/* {isCollapsed && (
@@ -139,11 +137,11 @@ useEffect(()=>{
           </button>
         )} */}
         <button
-            className="border rounded-full p-2 shadow-md hover:bg-neutral-300 transition"
-            onClick={extendHandler}
-          >
-            <MenuIcon size={20} />
-          </button>
+          className="border rounded-full p-2 shadow-md hover:bg-neutral-300 transition"
+          onClick={extendHandler}
+        >
+          <MenuIcon size={20} />
+        </button>
       </div>
     </>
   );
