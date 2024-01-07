@@ -1,4 +1,4 @@
-import { ChevronDown, ChevronRight, LucideIcon, Plus } from "lucide-react";
+import { ChevronDown, ChevronRight, LucideIcon, MoreHorizontal, Plus, Trash } from "lucide-react";
 import React, { MouseEvent } from "react";
 import { Id } from "../../../../convex/_generated/dataModel";
 import { cn } from "@/lib/utils";
@@ -6,6 +6,8 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { useMutation } from "convex/react";
 import { api } from "../../../../convex/_generated/api";
 import { toast } from "sonner";
+import { DropdownMenu,DropdownMenuTrigger,DropdownMenuSeparator,DropdownMenuItem,DropdownMenuContent } from "@/components/ui/dropdown-menu";
+import { useUser } from "@clerk/clerk-react";
 
 interface IProps {
   id?: Id<"documents">;
@@ -32,14 +34,19 @@ const Item = ({
   level = 0,
   isSearch,
 }: IProps) => {
+  const {user} = useUser()
   const ChevronIcon = expanded ? ChevronDown : ChevronRight;
 
   const create = useMutation(api.document.create);
-  const handleExpand = (e: React.MouseEvent<HTMLDivElement, globalThis.MouseEvent>)=>{
-    e.stopPropagation()
-    onExpand?.()
-  }
-  const onCreate = (e:  React.MouseEvent<HTMLDivElement, globalThis.MouseEvent>) => {
+  const handleExpand = (
+    e: React.MouseEvent<HTMLDivElement, globalThis.MouseEvent>
+  ) => {
+    e.stopPropagation();
+    onExpand?.();
+  };
+  const onCreate = (
+    e: React.MouseEvent<HTMLDivElement, globalThis.MouseEvent>
+  ) => {
     e.stopPropagation();
     if (!id) return;
     const promise = create({ title: "Untitled", parentDocument: id }).then(
@@ -90,11 +97,42 @@ const Item = ({
         </kbd>
       )}
       {!!id && (
-        <div className="ml-auto mr-2 opacity-0 group-hover:opacity-100 h-full  hover:bg-neutral-300 dark:hover:bg-neutral-600"
-        role={"button"}
-        onClick={onCreate}
-        >
-          <Plus size={18}  />
+        <div className="flex items-center gap-x-2 ml-auto">
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild
+            onClick={(e)=>e.stopPropagation()}
+            >
+              <div
+              className="opacity-0 group-hover:opacity-100 h-full ml-auto rounded-sm hover:bg-neutral-300 dark:hover:bg-neutral-600 text-muted-foreground"
+              role={"button"}>
+              <MoreHorizontal size={16}/>
+              </div>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent
+            className="w-60 p-2"
+            align="start"
+            side="right"
+            forceMount
+            >
+              <DropdownMenuItem
+              onClick={()=>{}}
+              >
+                Delete
+                <Trash size={16} className="ml-2"/>
+              </DropdownMenuItem>
+              <DropdownMenuSeparator/>
+              <div className="text-sm pl-2 text-muted-foreground">
+                {`Last Edited By : ${user?.fullName}`}
+              </div>
+            </DropdownMenuContent>
+          </DropdownMenu>
+          <div
+            className="ml-auto mr-2 opacity-0 group-hover:opacity-100 h-full  hover:bg-neutral-300 dark:hover:bg-neutral-600"
+            role={"button"}
+            onClick={onCreate}
+          >
+            <Plus size={18} />
+          </div>
         </div>
       )}
     </div>
