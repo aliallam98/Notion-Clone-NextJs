@@ -38,6 +38,18 @@ const Item = ({
   const ChevronIcon = expanded ? ChevronDown : ChevronRight;
 
   const create = useMutation(api.document.create);
+  const archive = useMutation(api.document.achieve);
+  const onArchive =  ( e: React.MouseEvent<HTMLDivElement, globalThis.MouseEvent>)=>{
+    e.stopPropagation()
+    if(!id) return
+    const promise = archive({id})
+    toast.promise(promise, {
+      loading: 'Loading...',
+      success: "Doc Is Archived",
+      error: 'Error',
+    })
+
+  }
   const handleExpand = (
     e: React.MouseEvent<HTMLDivElement, globalThis.MouseEvent>
   ) => {
@@ -115,7 +127,7 @@ const Item = ({
             forceMount
             >
               <DropdownMenuItem
-              onClick={()=>{}}
+              onClick={onArchive}
               >
                 Delete
                 <Trash size={16} className="ml-2"/>
