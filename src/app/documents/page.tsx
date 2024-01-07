@@ -4,9 +4,24 @@ import Image from "next/image";
 import React from "react";
 import { Button } from "../../components/ui/button";
 import { PlusCircle } from "lucide-react";
+import { useMutation } from "convex/react";
+import { api } from "../../../convex/_generated/api";
+import { toast } from "sonner";
 
 const Documents = () => {
   const { user } = useUser();
+  const create = useMutation(api.document.create)
+  const onCreate = ()=>{
+    const promise = create({
+      title:"Untitled"
+    })
+    toast.promise(promise,{
+      loading: 'Loading...',
+      success:"Created",
+      error: 'Error',
+    }
+      )
+  }
   return (
     <div className="flex flex-1 flex-col justify-center items-center">
       <Image
@@ -17,7 +32,9 @@ const Documents = () => {
         alt="jotion"
       />
       <h3>Welcome To {user?.firstName}&apos;s Jotion </h3>
-      <Button className="flex items-center gap-2 mt-2">
+      <Button className="flex items-center gap-2 mt-2"
+      onClick={onCreate}
+      >
         Create a Note
         <PlusCircle size={15} />
       </Button>

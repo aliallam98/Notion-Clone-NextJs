@@ -1,15 +1,28 @@
 "use client";
 
-import { ChevronsLeft, MenuIcon } from "lucide-react";
+import {
+  ChevronsLeft,
+  MenuIcon,
+  PlusCircle,
+  Search,
+  Settings,
+} from "lucide-react";
 import { usePathname } from "next/navigation";
 import React, { ElementRef, useEffect, useRef, useState } from "react";
 import { useMediaQuery } from "usehooks-ts";
 import { cn } from "../../../lib/utils";
 import UserItem from "./UserItem";
+import { useMutation, useQuery } from "convex/react";
+import { api } from "../../../../convex/_generated/api";
+import Item from "./Item";
+import { toast } from "sonner";
+import DocumentsList from "./DocumentsList";
 
 const Navigation = () => {
   const pathname = usePathname();
   const isMobile = useMediaQuery("(max-width: 768px)");
+  // const documents =  useQuery(api.document.get)
+  const create = useMutation(api.document.create);
 
   const isResizingRef = useRef(false);
   const sidebarRef = useRef<ElementRef<"aside">>(null);
@@ -24,8 +37,6 @@ const Navigation = () => {
       extendHandler();
     }
   }, [isMobile]);
-
-  const onClickHandler = () => {};
 
   const onMouseMoveHandler = (e: MouseEvent) => {
     if (!isResizingRef.current) return;
@@ -60,7 +71,6 @@ const Navigation = () => {
     document.addEventListener("mouseup", onMouseUpHandler);
   };
 
-  console.log(isResetting);
 
   const collapseHandler = () => {
     if (sidebarRef.current && navbarRef.current) {
@@ -86,6 +96,18 @@ const Navigation = () => {
       navbarRef.current.style.setProperty("left", isMobile ? "0" : "240px");
       setTimeout(() => setIsResetting(false), 300);
     }
+
+ 
+  };
+  const handleOnCreate = () => {
+    const promise = create({
+      title:"Untitled"
+    })
+    toast.promise(promise,{
+      loading: 'Loading...',
+      success:"Created",
+      error: 'Error',
+    })
   };
   return (
     <>
@@ -106,10 +128,14 @@ const Navigation = () => {
         </button>
 
         <div>
-          <UserItem/>
+          <UserItem />
+          <Item label="Search" icon={Search} isSearch onClick={() => {}} />
+          <Item label="Setting" icon={Settings} onClick={() => {}} />
+          <Item label="New Page" icon={PlusCircle} onClick={handleOnCreate} />
         </div>
+
         <div className="mt-4">
-          <p>Documents</p>
+          <DocumentsList/>
         </div>
         <div
           onMouseDown={onMouseDownHandler}

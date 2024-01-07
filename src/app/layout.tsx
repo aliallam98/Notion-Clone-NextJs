@@ -4,6 +4,8 @@ import "./globals.css";
 import Footer from "@/components/Footer";
 import { ThemeProvider } from "@/providers/ThemeProvider";
 import { ConvexClientProvider } from "@/providers/ConvexProvider";
+import { Toaster } from 'sonner';
+
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -28,6 +30,7 @@ export default function RootLayout({
           disableTransitionOnChange
           storageKey="Jotion-Theme"
         >
+          <Toaster position="top-center"/>
           {children}
           <Footer />
         </ThemeProvider>
