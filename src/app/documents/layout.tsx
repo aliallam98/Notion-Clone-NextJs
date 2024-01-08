@@ -5,6 +5,7 @@ import React, { ReactNode } from "react";
 import { Spinner } from "../../components/Spinner";
 import Navigation from "./_components/Navigation";
 import SearchCommand from "./_components/SearchCommand";
+import SettingsModel from "@/components/models/SettingsModel";
 
 const DocumentsLayout = ({ children }: { children: ReactNode }) => {
   const { isAuthenticated, isLoading } = useConvexAuth();
@@ -24,6 +25,7 @@ const DocumentsLayout = ({ children }: { children: ReactNode }) => {
       <main className="h-full  flex">
         <Navigation />
         <SearchCommand/>
+        <SettingsModel/>
         {children}
       </main>
   );

@@ -6,7 +6,7 @@ import { toast } from "sonner";
 import { Id } from "../../../../convex/_generated/dataModel";
 import { Spinner } from "@/components/Spinner";
 import { Search, Trash, Undo } from "lucide-react";
-import ConfirmModel from "./ConfirmModel";
+import ConfirmModel from "../../../components/models/ConfirmModel";
 
 const TrashBox = () => {
   const router = useRouter();
