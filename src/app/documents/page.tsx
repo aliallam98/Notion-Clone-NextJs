@@ -4,7 +4,7 @@ import Image from "next/image";
 import React from "react";
 import { Button } from "../../components/ui/button";
 import { PlusCircle } from "lucide-react";
-import { useMutation } from "convex/react";
+import { useMutation, useQuery } from "convex/react";
 import { api } from "../../../convex/_generated/api";
 import { toast } from "sonner";
 
@@ -22,6 +22,10 @@ const Documents = () => {
     }
       )
   }
+  const achievedDocs = useQuery(api.document.getAchievedDocs)
+
+  
+  
   return (
     <div className="flex flex-1 flex-col justify-center items-center">
       <Image

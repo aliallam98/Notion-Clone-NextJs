@@ -6,6 +6,7 @@ import {
   PlusCircle,
   Search,
   Settings,
+  Trash,
 } from "lucide-react";
 import { usePathname } from "next/navigation";
 import React, { ElementRef, useEffect, useRef, useState } from "react";
@@ -17,6 +18,13 @@ import { api } from "../../../../convex/_generated/api";
 import Item from "./Item";
 import { toast } from "sonner";
 import DocumentsList from "./DocumentsList";
+
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import TrashBox from "./TrashBox";
 
 const Navigation = () => {
   const pathname = usePathname();
@@ -71,7 +79,6 @@ const Navigation = () => {
     document.addEventListener("mouseup", onMouseUpHandler);
   };
 
-
   const collapseHandler = () => {
     if (sidebarRef.current && navbarRef.current) {
       setIsCollapsed(true);
@@ -96,18 +103,16 @@ const Navigation = () => {
       navbarRef.current.style.setProperty("left", isMobile ? "0" : "240px");
       setTimeout(() => setIsResetting(false), 300);
     }
-
- 
   };
   const handleOnCreate = () => {
     const promise = create({
-      title:"Untitled"
-    })
-    toast.promise(promise,{
-      loading: 'Loading...',
-      success:"Created",
-      error: 'Error',
-    })
+      title: "Untitled",
+    });
+    toast.promise(promise, {
+      loading: "Loading...",
+      success: "Created",
+      error: "Error",
+    });
   };
   return (
     <>
@@ -134,8 +139,19 @@ const Navigation = () => {
           <Item label="New Page" icon={PlusCircle} onClick={handleOnCreate} />
         </div>
 
+        <Popover>
+          <PopoverTrigger>
+            <Item label="Trash" icon={Trash} />
+          </PopoverTrigger>
+          <PopoverContent 
+          side = {isMobile ? "bottom" : "right"}
+          >
+            <TrashBox/>
+          </PopoverContent>
+        </Popover>
+
         <div className="mt-4">
-          <DocumentsList/>
+          <DocumentsList />
         </div>
         <div
           onMouseDown={onMouseDownHandler}
