@@ -1,15 +1,15 @@
-import {create} from "zustand"
+import { create } from "zustand";
 
 type SearchType = {
-    isOpen:boolean,
-    onOpen:()=>void,
-    onClose:()=>void,
-    onToggle:()=>void,
-}
+  isOpen: boolean;
+  onOpen: () => void;
+  onClose: () => void;
+  toggle: () => void;
+};
 
-export const  useSearch = create<SearchType> ((set,get)=>({
-    isOpen:false,
-    onOpen:()=>set({isOpen:true}),
-    onClose:()=>set({isOpen:false}),
-    onToggle:()=>set({isOpen: !get().isOpen}),
-}))
+export const useSearch = create<SearchType>((set, get) => ({
+  isOpen: false,
+  onOpen: () => set({ isOpen: true }),
+  onClose: () => set({ isOpen: false }),
+  toggle: () => set({ isOpen: !get().isOpen }),
+}));

@@ -4,6 +4,7 @@ import { redirect } from "next/navigation";
 import React, { ReactNode } from "react";
 import { Spinner } from "../../components/Spinner";
 import Navigation from "./_components/Navigation";
+import SearchCommand from "./_components/SearchCommand";
 
 const DocumentsLayout = ({ children }: { children: ReactNode }) => {
   const { isAuthenticated, isLoading } = useConvexAuth();
@@ -22,6 +23,7 @@ const DocumentsLayout = ({ children }: { children: ReactNode }) => {
   return (
       <main className="h-full  flex">
         <Navigation />
+        <SearchCommand/>
         {children}
       </main>
   );
