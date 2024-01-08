@@ -87,35 +87,8 @@ export const getAchievedDocs = query({
   },
 });
 
+
 // Restore  Achieved Docs
-// export const restoreAchievedDocs = mutation({
-//   args: { id: v.id("documents") },
-//   handler : async (ctx,args)=>{
-//     const identity = await ctx.auth.getUserIdentity();
-//     if (!identity) {
-//       throw new Error("Not Authenticated");
-//     }
-//     const userId = identity.subject;
-//     const document = await ctx.db.get(args.id)
-//     if(!document){
-//       throw new Error("Cannot Find This Doc")
-//     }
-//     if(document.userId !== userId){
-//       throw new Error("Unauthorized")
-//     }
-//     console.log(document);
-
-
-//     if(document.parentDocument){
-//       const parent = await ctx.db.get(document.parentDocument)
-//       if(parent?.isArchived){
-//         console.log(parent);
-//       }
-//     }
-    
-//     return document
-//   }
-// })
 export const restore = mutation({
   args: { id: v.id("documents") },
   handler: async (ctx, args) => {
@@ -211,7 +184,11 @@ export const get = query({
     if (!identity) {
       throw new Error("Not Authenticated");
     }
-    const documents = await ctx.db.query("documents").collect();
+    const userId =identity.subject
+    const documents = await ctx.db.query("documents").withIndex("by_user",(q)=>q.eq("userId",userId))
+    .filter((q)=>q.eq(q.field("isArchived"),false))
+    .order("desc")
+    .collect()
     return documents;
   },
 });
