@@ -62,7 +62,7 @@ const DocumentsList = ({ parentDocumentId, level = 0 }: IProps) => {
         <div key={doc._id}>
             <Item
             id={doc._id}
-            // onClick={()=>onRedirect(doc._id)}
+            onClick={()=>onRedirect(doc._id)}
             label={doc.title}
             icon={FileIcon}
             documentIcon={doc.icon}
