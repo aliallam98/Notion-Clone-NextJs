@@ -198,7 +198,6 @@ export const create = mutation({
   args: { title: v.string(), parentDocument: v.optional(v.id("documents")) },
   handler: async (ctx, args) => {
     const identity = await ctx.auth.getUserIdentity();
-    console.log(identity);
     if (!identity) {
       throw new Error("Not Authenticated");
     }
@@ -216,3 +215,29 @@ export const create = mutation({
     return document;
   },
 });
+
+
+export const getById = query({
+  args : {documentId:v.id("documents")},
+  handler: async (ctx,args)=>{
+    const identity = await ctx.auth.getUserIdentity()
+
+    const isDocExisting = await ctx.db.get(args.documentId)
+    if(!isDocExisting){
+      return {success:false,message:"Cannot Find This Doc"}
+    }
+    if(isDocExisting.isPublished && !isDocExisting.isArchived){
+      return {success:false,message:"Done",results:isDocExisting}
+    }
+
+    
+    if(!identity){
+      throw new Error("Not Authenticated");
+    }
+    const userId = identity.subject;
+    if(isDocExisting.userId !== userId){
+      throw new Error("Not Authenticated");
+    }
+    return isDocExisting
+  }
+})
