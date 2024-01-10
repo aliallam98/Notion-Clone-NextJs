@@ -241,3 +241,34 @@ export const getById = query({
     return isDocExisting
   }
 })
+
+export const updateById = mutation({
+  args:{
+    id: v.id("documents"),
+    title:v.optional(v.string()),
+    isArchived:v.optional(v.boolean()),
+    isPublished:v.optional(v.boolean()),
+    icon:v.optional(v.string()),
+    coverImage:v.optional(v.string()),
+    content:v.optional(v.string()),
+  },
+  handler: async (ctx, args)=> {
+    const identity = await ctx.auth.getUserIdentity()
+    const userId = identity?.subject
+    if(!identity){
+      throw new Error("Not Authenticated");
+    }
+    const isDocExisting = await ctx.db.get(args.id)
+    if(!isDocExisting){
+      throw new Error("Cannot Find This Doc");
+    }
+    if(isDocExisting.userId !== userId){
+      throw new Error("Not Authenticated");
+    }
+    const {_id,...rest} = isDocExisting
+    const document = await ctx.db.patch(args.id,{
+      ...rest
+    })
+    return document
+  },
+})
