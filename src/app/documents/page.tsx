@@ -22,7 +22,6 @@ const Documents = () => {
     }
       )
   }
-  const achievedDocs = useQuery(api.document.getAchievedDocs)
 
   
   

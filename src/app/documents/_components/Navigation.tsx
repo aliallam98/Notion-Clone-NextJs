@@ -8,7 +8,7 @@ import {
   Settings,
   Trash,
 } from "lucide-react";
-import { usePathname } from "next/navigation";
+import { useParams, usePathname } from "next/navigation";
 import React, { ElementRef, useEffect, useRef, useState } from "react";
 import { useMediaQuery } from "usehooks-ts";
 import { cn } from "../../../lib/utils";
@@ -27,12 +27,15 @@ import {
 import TrashBox from "./TrashBox";
 import { useSearch } from "@/hooks/Search";
 import { useSettings } from "@/hooks/Settings";
+import Title from "./Title";
+import Navbar from "./Navbar";
 
 const Navigation = () => {
   const search = useSearch();
   const settings = useSettings()
 
   const pathname = usePathname();
+  const params = useParams()
   const isMobile = useMediaQuery("(max-width: 768px)");
   // const documents =  useQuery(api.document.get)
   const create = useMutation(api.document.create);
@@ -167,31 +170,31 @@ const Navigation = () => {
           )}
         />
       </aside>
-      <div
-        ref={navbarRef}
-        className={cn(
-          "left-60 w-[calc(100%-240px)] absolute p-6 top-0 bg-purple-600",
-          isResetting && "transition-all ease-in-out duration-300",
-          isMobile && "left-0 w-full p-6"
-        )}
+      {!!params.documentId ? (
+              <Navbar
+              isMobile = {isMobile}
+              isResetting = {isResetting}
+              navbarRef={navbarRef}
+              extendHandler={extendHandler}
+              />
+      ):     <nav
+      ref={navbarRef}
+      className={cn(
+        "left-60 w-[calc(100%-240px)] absolute p-6 top-0 bg-purple-300",
+        isResetting && "transition-all ease-in-out duration-300",
+        isMobile && "left-0 w-full"
+      )}
+    >
+      <button
+        className="block border rounded-full p-2 shadow-md hover:bg-neutral-300 transition"
+        onClick={extendHandler}
       >
-        {/* {isCollapsed && (
-          <button
-            className="border rounded-full p-2 shadow-md hover:bg-neutral-300 transition"
-            onClick={extendHandler}
-          >
-            <MenuIcon size={20} />
-          </button>
-        )} */}
-        <button
-          className="border rounded-full p-2 shadow-md hover:bg-neutral-300 transition"
-          onClick={extendHandler}
-        >
-          <MenuIcon size={20} />
-        </button>
-      </div>
+        <MenuIcon size={20} />
+      </button>
+    </nav>}
     </>
   );
 };
 
 export default Navigation;
+

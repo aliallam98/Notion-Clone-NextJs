@@ -224,10 +224,10 @@ export const getById = query({
 
     const isDocExisting = await ctx.db.get(args.documentId)
     if(!isDocExisting){
-      return {success:false,message:"Cannot Find This Doc"}
+      throw new Error("Cannot Find This Doc");
     }
     if(isDocExisting.isPublished && !isDocExisting.isArchived){
-      return {success:false,message:"Done",results:isDocExisting}
+      return isDocExisting
     }
 
     
@@ -243,10 +243,10 @@ export const getById = query({
 })
 
 export const updateById = mutation({
+
   args:{
     id: v.id("documents"),
     title:v.optional(v.string()),
-    isArchived:v.optional(v.boolean()),
     isPublished:v.optional(v.boolean()),
     icon:v.optional(v.string()),
     coverImage:v.optional(v.string()),
@@ -254,10 +254,11 @@ export const updateById = mutation({
   },
   handler: async (ctx, args)=> {
     const identity = await ctx.auth.getUserIdentity()
-    const userId = identity?.subject
     if(!identity){
       throw new Error("Not Authenticated");
     }
+    const userId = identity?.subject
+
     const isDocExisting = await ctx.db.get(args.id)
     if(!isDocExisting){
       throw new Error("Cannot Find This Doc");
@@ -265,10 +266,12 @@ export const updateById = mutation({
     if(isDocExisting.userId !== userId){
       throw new Error("Not Authenticated");
     }
-    const {_id,...rest} = isDocExisting
+    const {id,...rest} = args
     const document = await ctx.db.patch(args.id,{
       ...rest
     })
+    
     return document
+    
   },
 })
